@@ -54,9 +54,7 @@ header h2 {
 }
 .lights {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 1em 1em;
-}
-.lights > div {
 }
 </style>>

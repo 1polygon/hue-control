@@ -1,17 +1,27 @@
 <template>
     <div class="light">
-        <div class="name">{{ this.name }}</div>
-        <Toggle class="toggle" :checked="this.state.on" @click="toggle" />
+        <div class="row">
+            <div class="name">{{ this.name }}</div>
+            <Toggle class="toggle" :checked="this.state.on" @click="toggle" />
+        </div>
+        <Slider
+            :value="this.state.bri"
+            :max="255"
+            :disabled="!this.state.on"
+            @change="brightnessChange"
+        />
     </div>
 </template>
 
 <script>
 import Toggle from "./Toggle";
+import Slider from "./Slider.vue";
 import HueStore from "../store/hue";
 
 export default {
     components: {
         Toggle,
+        Slider,
     },
     props: {
         data: {
@@ -19,7 +29,6 @@ export default {
             default: null,
         },
     },
-    setup() {},
     data() {
         return {
             name: this.data.name,
@@ -36,6 +45,13 @@ export default {
         toggle() {
             HueStore.SetLightState(this.data.id, { on: !this.state.on });
         },
+        brightnessChange(val) {
+            const bri = Math.round(val);
+            if (bri != this.lastBri) {
+                HueStore.SetLightState(this.data.id, { bri: bri });
+                this.lastBri = bri;
+            }
+        },
     },
 };
 </script>
@@ -47,13 +63,13 @@ export default {
     padding: 1em;
     box-sizing: border-box;
 }
-
+.row {
+    display: flex;
+    padding-bottom: 0.25em;
+}
 .name {
     font-size: 0.8em;
     font-weight: bold;
-}
-
-.toggle {
-    margin-top: 1em;
+    flex: 1;
 }
 </style>
